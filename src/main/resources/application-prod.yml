@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    show-sql: false
+
+jwt:
+  secret: ${JWT_SECRET}  # MUST be set via environment variable
+
+logging:
+  level:
+    root: WARN
+    com.tournamentapp: INFO
