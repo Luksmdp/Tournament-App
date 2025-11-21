@@ -14,6 +14,7 @@ import com.tournamentapp.tournament_app.shared.domain.ValidationErrorResponse;
 import com.tournamentapp.tournament_app.teams.domain.exception.InvalidTeamException;
 import com.tournamentapp.tournament_app.teams.domain.exception.TeamNameAlreadyExistsException;
 import com.tournamentapp.tournament_app.teams.domain.exception.TeamNotFoundException;
+import com.tournamentapp.tournament_app.tournaments.domain.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -230,6 +231,74 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Invalid team",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    //Tournament
+
+    @ExceptionHandler(TournamentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTournamentNotFound(TournamentNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Tournament not found",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(TournamentAlreadyStartedException.class)
+    public ResponseEntity<ErrorResponse> handleTournamentAlreadyStarted(TournamentAlreadyStartedException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Tournament already started",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(TeamNotInTournamentException.class)
+    public ResponseEntity<ErrorResponse> handleTeamNotInTournament(TeamNotInTournamentException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Team not in tournament",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(PlayerNotInTournamentException.class)
+    public ResponseEntity<ErrorResponse> handlePlayerNotInTournament(PlayerNotInTournamentException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Player not in tournament",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(InsufficientTeamsException.class)
+    public ResponseEntity<ErrorResponse> handleInsufficientTeams(InsufficientTeamsException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Insufficient teams",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(InvalidTournamentStateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTournamentState(InvalidTournamentStateException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid tournament state",
                 ex.getMessage(),
                 LocalDateTime.now()
         );
