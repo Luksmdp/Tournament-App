@@ -11,6 +11,9 @@ import com.tournamentapp.tournament_app.players.domain.model.PlayerStatus;
 import com.tournamentapp.tournament_app.shared.domain.DomainException;
 import com.tournamentapp.tournament_app.shared.domain.ErrorResponse;
 import com.tournamentapp.tournament_app.shared.domain.ValidationErrorResponse;
+import com.tournamentapp.tournament_app.teams.domain.exception.InvalidTeamException;
+import com.tournamentapp.tournament_app.teams.domain.exception.TeamNameAlreadyExistsException;
+import com.tournamentapp.tournament_app.teams.domain.exception.TeamNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -192,6 +195,41 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Person not eligible",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    //Team
+
+    @ExceptionHandler(TeamNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTeamNotFound(TeamNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "Team not found",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(TeamNameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleTeamNameAlreadyExists(TeamNameAlreadyExistsException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Team name already exists",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(InvalidTeamException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTeam(InvalidTeamException ex) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid team",
                 ex.getMessage(),
                 LocalDateTime.now()
         );
